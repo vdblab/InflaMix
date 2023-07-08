@@ -5,10 +5,6 @@ date: "2023-07-08"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## InflaMix Manuscript Code
 
 This github repository contains code and models that accompany the InflaMix manuscript while it is under review. 
