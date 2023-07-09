@@ -264,7 +264,7 @@ coxmodels_crpferr <- list(crp_cox0os = crp_dev_coxfit0_os,
 ####
 save(bootstrap_inf,
      coxmodels_crpferr,
-     file=bstfun::here_data("output/dev_inf_and_coxpredmodels.RData"))
+     file="output/dev_inf_and_coxpredmodels.RData")
 
 
 ###### SHINY App Models #####

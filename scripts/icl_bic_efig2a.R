@@ -3,8 +3,8 @@ library(mclust)
 library(ggsci)
 library(ggrepel)
 rm(list=ls())
-load(bstfun::here_data("analysis/scaledata.RData"))
-source("scripts/analysis/functions_constants.R")
+load("output/scaledata.RData")
+source("scripts/functions_constants.R")
 
 # Preprocess and Generate Model from Development Cohort
 df_dev <-  left_join(df_all, df_labs_all %>% select(!cohort), by="record_id") %>%

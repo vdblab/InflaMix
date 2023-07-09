@@ -5,19 +5,66 @@ library(moments)
 library(ggrepel)
 
 # Metadata and laboratory data for all patients across all treatment centers
-df_all <- read.csv("data/df_all.csv")
-labs_long_raw <- read.csv("data/labs_long_raw.csv")
-source("scripts/functions_constants.R")
+# - df_all
+#   1. record_id
+#   2. center
+#   3. age
+#   4. dt_car_t (1 if infusion was before 01/01/2022, else 0)
+#   5. dx.factor (diagnoses)
+#   6. dx_simple.factor (simplified diagnoses - i.e., LBCL, MCL, FL)
+#   7. car_t_product_simple.factor (name of CAR-T product)
+#   8. costim (costimulatory domain)
+#   9. crs24
+#   10. icans24
+#   11. everCR_100 (CR by day 100)
+#   12. ev_os (survival)
+#   13. tt_os_m (overall survival date)
+#   14. ev_pfs (PFS)
+#   15. tt_pfs_m (PFS date)
+#   16. trans_nhl.factor (transformed lymphoma?)
+#   17. bridge.factor (any bridging used?)
+#   18. primary_ref.factor (primary refractory disease?)
+#   19. stage_aph.factor (Disease stage at apheresis)
+#   20. num_rx_line_3lev (number of prior lines of therapy)
+#   21. bl_suvmax (pre-lymphodepletion SUVmax)
+#   22. bl_mtv (pre-lymphodepletion MTV)
+#   23. cohort
+#   24. analysis_type (all clinical outcome data available)
+#   25. kps90 (KPS < 90?)
+#
+# - labs_long_raw
+#   1. record_id
+#   2. lab (lab name)
+#   3. raw (raw_value)
+#   4. uln (upper limit of normal)
+#   5. day (timepoint - d0, preld, or preaph)
 
+# With all data available - would load the two following files.
+# df_all <- read.csv("data/df_all.csv")
+# labs_long_raw <- read.csv("data/labs_long_raw.csv")
+
+# Would use these filtering criteria for the full datasets
 lbcl_dx <- c("DLBCL NOS", "High-grade B-cell lymphoma with MYC and BCL2 and/or BCL6 rearrangement",
              "High-grade B-cell lymphoma, NOS", "Primary mediastinal B-cell lymphoma",
              "T-cell rich DLBCL", "Primary cutaneous DLBCL, leg type", "Intravascular large B-cell lymphoma",
              "EBV-positive DLBCL", "DLBCL associated with chronic inflammation",
              "ALK positive large B-cell lymphoma", "Plasmablastic lymphoma",
-             "Primary effusion lymphoma", "Large B-cell lymphoma arising in HHV8-associated multicentric Castleman Disease")
+             "Primary effusion lymphoma", "Large B-cell lymphoma arising in HHV8-associated multicentric Castleman Disease", "LBCL")
 
-dev_products <- c("Axicabtagene ciloleucel", "Tisagenlecleucel", "Lisocabtagene maraleucel")
+dev_products <- c("Axicabtagene ciloleucel", "Tisagenlecleucel", "Lisocabtagene maraleucel", "commercial_LBCL")
 
+# For limited dataset 1 available - laboratory data for Cohort 1: MSK LBCL Derivation Cohort
+df_all <- read.csv("data/temp_limited_df_all.csv") %>%
+  mutate(dx.factor="LBCL", car_t_product_simple.factor="commercial_LBCL", cohort="dev")
+labs_long_raw <- read.csv("data/deriv_cohort_d0_labs.csv") # This is the datafile included with the submission - please place it in the data folder
+source("scripts/functions_constants.R")
+
+rids <- rep(1, 16)
+for(i in 2:149){
+  rids <- c(rids, rep(i, 16))
+}
+
+labs_long_raw <- labs_long_raw %>% select(!center) %>% mutate(record_id=paste0("id_", rids)) %>% rename(raw=raw_value)
 
 cluster_labs = c(
   "albumin",
@@ -50,8 +97,8 @@ df_labs_all_temp <- labs_long_raw %>% mutate(tr_uln=raw/uln) %>%
 # Derivation Cohort
 cohort_dev <- (df_all %>%
                  filter(center=="MSK") %>% # treated at MSK
-                 filter(dx.factor %in%  lbcl_dx) %>% # Large B-cell lymphoma diagnosis
-                 filter(car_t_product_simple.factor %in% dev_products) %>% # Commercial products only
+                 filter(dx.factor %in%  lbcl_dx) %>%
+                 filter(car_t_product_simple.factor %in% dev_products) %>%
                  filter(dt_car_t == 1) %>% # Only patients treated before January 1, 2022
                  left_join(
                    df_labs_all_temp %>%
@@ -175,5 +222,4 @@ df_all <- df_all %>%
   mutate(record_id=record_id)
 
 # Save processed/scaled data objects for downstream analysis.
-save(sfig3, file="figures/sfig3.RData")
 save(df_labs_all, df_all, file="output/scaledata.RData")

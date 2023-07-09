@@ -1,7 +1,7 @@
 rm(list=ls())
-load(bstfun::here_data("output/model.RData"))
-load(bstfun::here_data("output/scaledata.RData"))
-source("scripts/analysis/functions_constants.R")
+load("output/model.RData")
+load("output/scaledata.RData")
+source("scripts/functions_constants.R")
 
 library(corrplot)
 library(umap)

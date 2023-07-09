@@ -34,6 +34,7 @@ save(d0clusters, dev_mu, dev_sig, dev_pro, dev_inflammClus, dev_LEASTinflammClus
 
 
 # Extended Figure 2h
+feats <- c(3, 12)
 d0clusters1 <- d0clusters
 d0clusters1$parameters$mean <- d0clusters1$parameters$mean[feats,]
 d0clusters1$parameters$variance$sigma <- d0clusters1$parameters$variance$sigma[feats,feats,]
@@ -56,19 +57,22 @@ scale_color_manual(values=colorclusters(2), labels=c('Non-Inflammatory', 'Inflam
 
 
 # Extended Figure 2i
-cluster_labs = c( # Cluster without considering WBC, Plt, Tbili (tbr)
-  "albumin",
-  "alk",
-  "ast",
-  "ferritin",
-  "hb",
-  "ldh",
-  "il10",
-  "il6",
-  "tnfa",
-  "crp",
-  "ddimer"
-)
+cluster_labs = c( # Cluster with or without considering WBC, Plt, Tbili (tbr)
+    "albumin",
+    "alk",
+    "ast",
+    "ferritin",
+    "hb",
+    "ldh",
+    "plt",
+    "tbr",
+    "il10",
+    "il6",
+    "tnfa",
+    "crp",
+    "ddimer",
+    "wbc"
+  )
 
 df_dev <-  left_join(df_all, df_labs_all %>% select(!cohort), by="record_id") %>%
   filter(analysis_type==1) %>% # Must have curated metadata
@@ -88,7 +92,7 @@ d0clusters1$parameters$variance$sigma <- d0clusters1$parameters$variance$sigma[f
 d0clusters1$parameters$variance$shape <- d0clusters1$parameters$variance$shape[feats,]
 d0clusters1$data <- d0clusters1$data[,feats]
 
-efig2i <- fviz_mclust(d0clusters1, "classification", geom = "point",
+efig2hi <- fviz_mclust(d0clusters1, "classification", geom = "point",
                       ylab="Log-Scaled C-Reactive Protein (CRP)", xlab="Scaled Aspartate Transaminase (AST)",
                       ggtheme=theme_minimal) +
   labs(
@@ -99,6 +103,3 @@ efig2i <- fviz_mclust(d0clusters1, "classification", geom = "point",
   scale_fill_manual(values=colorclusters(2))+
   scale_color_manual(values=colorclusters(2), labels=c('Non-Inflammatory', 'Inflammatory'))+
   guides(fill=FALSE, shape=FALSE) + xlim(-1, 2.5)
-
-
-save(efig2h, efig2i, file="figures/efig2h_efig2i.RData")

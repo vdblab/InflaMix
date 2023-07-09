@@ -1,8 +1,8 @@
 rm(list=ls())
-load(bstfun::here_data("output/model.RData"))
-load(bstfun::here_data("output/scaledata.RData"))
-load(bstfun::here_data("output/dev_inf_and_coxpredmodels.RData"))
-source("scripts/analysis/functions_constants.R")
+load("output/model.RData")
+load("output/scaledata.RData")
+load("output/dev_inf_and_coxpredmodels.RData")
+source("scripts/functions_constants.R")
 
 library(tidyverse)
 library(mclust)

@@ -4,9 +4,9 @@ library(ggsci)
 library(ggrepel)
 
 rm(list=ls())
-load(bstfun::here_data("analysis/scaledata.RData"))
-load(bstfun::here_data("analysis/model.RData"))
-source("scripts/analysis/functions_constants.R")
+load("output/scaledata.RData")
+load("output/model.RData")
+source("scripts/functions_constants.R")
 
 featdist_df <- left_join(df_all, df_labs_all %>% select(!cohort) %>% select(c(record_id, starts_with("d0_"))), by="record_id") %>%
   filter(analysis_type==1)  %>%
