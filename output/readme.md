@@ -1,1 +1,1 @@
-### This is where script output is stored}
+### This is where script output is stored.
