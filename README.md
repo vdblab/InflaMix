@@ -17,7 +17,7 @@ A description of the two data inputs for this project and a description of their
 
 Scripts should be run in the following order which contains code for the corresponding figures:
 
-0 . Please place Dataset 1 (deriv_cohort_d0_labs.csv) into the data folder. 
+### 0 . Please place Dataset 1 (deriv_cohort_d0_labs.csv) into the data folder. This was provided as a supplementary material. 
 
 1. scaling_sfig3.R 
   - Supplementary Figure 3
@@ -33,23 +33,30 @@ Scripts should be run in the following order which contains code for the corresp
   
 5. deriv_cohort_properties_fig1a_g_sfig2.R 
   - Figure 1a-g, Supplementary Figure 2
+   - Note that Figures 1d, e, f cannot be plotted with provided data, code should be run line-by-line.
   
 6. deriv_outcomes_fig1h_l_table2.R
  - Figure 1h-l
+ - Note that this script cannot be run with provided data. 
  
 7. partial_lab_clustering_fig2ab_fig2a_c.R
  - Figure 2a-b, Figure 3a-c
+ - Note that this script cannot be run with provided data. Though the code and comments describe the analysis to evaluate the quality of clustering with partially available laboratory data 
  
 8. validation_fig2c_k_fig3d_l_efig4_table2.R
  - Figure 2c-k, Figure 3d-l, Extended Figure 4a-f
+ - Note that this script cannot be run with provided data. 
  
 9. cohort_heatmaps_efig3a_d.R
  - Extended Figure 3a-d
+ - Note that only Extended Figure 3a be plotted with provided data
  
 10. exploratory_analyses_MTV_table2.R
+ - Note that this script cannot be run with provided data. 
 
 11. cluster_transitions_figure6a_e.R
  - Figure 6a-e
+ - Note that this script cannot be run with provided data. 
 
 Packages and version information for most dependencies are included in the renv.lock lockfile. All required libraries are listed at the top of each script. 
 

@@ -31,7 +31,7 @@ dfa <- left_join(df_all, df_labs_all %>% select(!cohort), by="record_id") %>%
   select(record_id, contains(cluster_labs)) %>%
   drop_na() %>% column_to_rownames("record_id") %>% select(starts_with("d0_"))
 
-# Uncomment these lines to instead evaluate all 16 labs including creatinine and alt to generate supplementary figure 2
+# Uncomment these lines below to instead evaluate all 16 labs including creatinine and alt to generate supplementary figure 2
 # dfa <- left_join(df_all, df_labs_all %>% select(!cohort), by="record_id") %>%
 #   filter(analysis_type==1) %>%
 #   filter(cohort=="MSK Development") %>%
@@ -42,6 +42,7 @@ dfa <- left_join(df_all, df_labs_all %>% select(!cohort), by="record_id") %>%
 colnames(dfa) <- c("Albumin",
                       "ALP",
                       "AST",
+                   #"Creatinine",
                       "Ferritin",
                       "Hgb",
                       "LDH",
@@ -50,6 +51,7 @@ colnames(dfa) <- c("Albumin",
                       "IL-10",
                       "IL-6",
                       "TNFa",
+                   #"ALT",
                       "CRP",
                       "Ddimer",
                    "WBC"
@@ -238,7 +240,7 @@ fig1b <- ggdraw(grid.arrange(fig1b_main, fig1b_leg, layout_matrix=fig1b_layout))
 ############ Figure 1c UMAP ##########
 umap_data <- dfb %>% select(record_id, starts_with("d0_")) %>% select(record_id, contains(cluster_labs))
 umap_meta <- dfb %>% select(record_id, cluster, tau)
-set.seed(10)
+set.seed(18)
 umap_fit <- umap_data %>% column_to_rownames("record_id") %>% umap(n_components=2)
 umap_df <- umap_fit$layout %>% as.data.frame() %>%
   dplyr::rename(UMAP1 = "V1",
