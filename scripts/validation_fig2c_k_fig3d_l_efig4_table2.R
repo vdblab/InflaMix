@@ -12,6 +12,7 @@ library(broom)
 library(ggsurvfit)
 library(survcomp)
 library(pROC)
+library(cowplot)
 
 # Select all patients not in the derivation cohort
 df_all_chrt <- left_join(df_all, df_labs_all %>% select(!cohort), by="record_id") %>%
@@ -163,11 +164,12 @@ pym = 0.9
 oxm = 7
 oym = 0.13
 
-ssr_survplot(df=df_analysis,timemax=tmax,qmonth=qm,wght=FALSE,sz=sz1,
-                        xmi=pxm,
-                        ymi=pym,
+clus_ggsurvplot(df=df_analysis,wght=FALSE,sz=sz1,
+                        xmi=ifelse(otcm=="PFS", pxm, oxm),
+                        ymi=ifelse(otcm=="PFS", pym, oym),
                         event=tolower(otcm),
                         metric=validation_inf %>% filter(analysis==anval & outcome==otcm),
+                        labadj=0.05,
                         labl="")
 
 

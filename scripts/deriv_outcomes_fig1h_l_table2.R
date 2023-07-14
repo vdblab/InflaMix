@@ -14,6 +14,7 @@ library(pROC)
 library(labelled)
 library(grid)
 library(gridExtra)
+library(cowplot)
 
 # Covariates for regression models
 lbcl_covar="cluster+age+primary_ref.factor+costim+bin_preld_ldh"
@@ -177,27 +178,28 @@ fig1j <- clust_bar_plot(df=fig_df, tp_pre="", list_res=c("CR"), sz=5, metric=met
 
 
 # KM survival estimate plots, can use this for figures 1k and 1l
-fig1k <- ssr_survplot(df=dev_df %>% mutate(Cluster=cluster),
+
+fig1k <- clus_ggsurvplot(df=dev_df %>% mutate(Cluster=cluster),
              event="pfs",
-             timemax=25,
-             qmonth=5,
              metric=bootstrap_inf %>% filter(analysis=="devcohort_inf" & outcome=="PFS"),
              wght=FALSE,
              sz=18,
              xmi=16,
-             ymi=0.9,
-             labl="")
+             ymi=0.8,
+             labadj=0.05,
+             labl=""
+             )
 
-fig1l <- ssr_survplot(df=dev_df %>% mutate(Cluster=cluster),
+fig1l <- clus_ggsurvplot(df=dev_df %>% mutate(Cluster=cluster),
                       event="os",
-                      timemax=25,
-                      qmonth=5,
                       metric=bootstrap_inf %>% filter(analysis=="devcohort_inf" & outcome=="OS"),
                       wght=FALSE,
                       sz=18,
                       xmi=16,
                       ymi=0.9,
-                      labl="")
+                      labadj=0.01,
+                      labl=""
+                      )
 
 
 

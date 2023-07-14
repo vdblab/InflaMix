@@ -262,6 +262,82 @@ ssr_survplot <- function(df, event, timemax, qmonth, metric, wght, sz, xmi, ymi,
   return(pl_fin)
 }
 
+# Plot KM curves for survival outcomes
+clus_ggsurvplot <- function(df, event, metric, wght, sz, xmi, ymi, labadj, labl){
+
+  if(wght==FALSE){
+    df <- df %>% group_by(record_id) %>% slice(which.max(tau)) %>% ungroup() %>%
+      mutate(tau=1)
+  }
+
+  if(event=="pfs"){
+    event <- "PFS"
+    sp <- survfit(Surv(tt_pfs_m, ev_pfs) ~ Cluster, data = df, weights=tau)
+  } else {
+    if(event=="os") {
+      event <- "OS"
+      sp <- survfit(Surv(tt_os_m, ev_os) ~ Cluster, data = df, weights=tau)
+    } else {event <- ""}
+  }
+
+  timedat <- sp$time
+  strat1 <- sp$strata[1]
+  strat2 <- sp$strata[2]
+  timind1 <- which.min(abs(timedat[1:strat1]-20))
+  timind2 <- which.min(abs(timedat[-(1:strat1)]-20))+strat1
+  survind1 <- sp$surv[timind1]+0.1
+  survind2 <- sp$surv[timind2]+0.1
+
+  survpl <- sp %>% ggsurvfit(linewidth=0.75) +
+    scale_y_continuous(
+      limits = c(0, 1),
+      labels = scales::percent,
+      expand = c(0.01, 0)
+    ) +
+    coord_cartesian(xlim=c(0, 24), clip="on")+
+    scale_x_continuous(
+      #limits = c(0, 25),
+      breaks = c(0,6,12,18,24),
+      labels = c(0, 6,12,18,24)
+    ) +
+    scale_color_manual(values = colorclusters(2)) +
+    theme_minimal() +
+    theme(legend.position = FALSE) +
+    add_risktable(risktable_height=0.2, size=5,
+                  risktable_stats = "n.risk",
+                  theme = list( theme_risktable_default(axis.text.y.size = 13, plot.title.size = 13))
+    )+
+    add_risktable_strata_symbol(symbol = "\U25CF", size = 25)+
+    add_censor_mark() +
+    labs(
+      title = "",
+      y = paste0(labl, " Probability"),
+      x="Months from CAR-T Infusion"
+    ) +
+    guides(color=FALSE, linetype=FALSE)+
+    theme(
+      axis.text.x = element_text(angle = 0, size=15),
+      axis.text.y = element_text(angle = 0, size=15),
+      axis.title.x = element_text(angle = 0, size=18),
+      axis.title.y = element_text(size=18),
+      legend.text = element_text(size=16),
+      legend.position="bottom"
+    ) +
+    annotate("label", x=20, y=survind1+labadj, label="Non-Inflammatory", size=sz/3, color=colorclusters(2)[1])+
+    annotate("label", x=20, y=survind2+labadj, label="Inflammatory", size=(sz/3)+0.5, color=colorclusters(2)[2])+
+    labs(
+      title ="",
+      y = paste0(event, " Probability"),
+      x="Months from Infusion"
+    ) +
+    annotate(geom = "text", x=xmi, y=ymi, label = paste0(
+      "Adj. HR (95% CI): ", metric$expEstimate, " (", metric$low_ci, " - ", metric$high_ci, ")\n", "p ",  cpval(metric$pvalue)
+    ), size=6)
+
+  return(survpl)
+}
+
+
 # Calculate Inferences for Validation
 clust_metrics <- function(df, dxres, covar, lcovar, res_covar, coxmodels, aname, wght){
 

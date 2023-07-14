@@ -40,8 +40,8 @@ library(ggrepel)
 #   5. day (timepoint - d0, preld, or preaph)
 
 # With all data available - would load the two following files.
-# df_all <- read.csv("data/df_all.csv")
-# labs_long_raw <- read.csv("data/labs_long_raw.csv")
+#df_all <- read.csv("data/df_all.csv")
+#labs_long_raw <- read.csv("data/labs_long_raw.csv")
 
 # Would use these filtering criteria for the full datasets
 lbcl_dx <- c("DLBCL NOS", "High-grade B-cell lymphoma with MYC and BCL2 and/or BCL6 rearrangement",
@@ -56,15 +56,10 @@ dev_products <- c("Axicabtagene ciloleucel", "Tisagenlecleucel", "Lisocabtagene 
 # For limited dataset 1 available - laboratory data for Cohort 1: MSK LBCL Derivation Cohort
 df_all <- read.csv("data/temp_limited_df_all.csv") %>%
   mutate(dx.factor="LBCL", car_t_product_simple.factor="commercial_LBCL", cohort="dev")
-labs_long_raw <- read.csv("data/deriv_cohort_d0_labs.csv") # This is the datafile included with the submission - please place it in the data folder
+labs_long_raw <- read.csv("data/deriv_cohort_d0_labs_v2_dataset1.csv") # This is the datafile included with the submission - please place it in the data folder
 source("scripts/functions_constants.R")
 
-rids <- rep(1, 16)
-for(i in 2:149){
-  rids <- c(rids, rep(i, 16))
-}
-
-labs_long_raw <- labs_long_raw %>% select(!center) %>% mutate(record_id=paste0("id_", rids)) %>% rename(raw=raw_value)
+labs_long_raw <- labs_long_raw %>% select(!center)
 
 cluster_labs = c(
   "albumin",
@@ -223,3 +218,4 @@ df_all <- df_all %>%
 
 # Save processed/scaled data objects for downstream analysis.
 save(df_labs_all, df_all, file="output/scaledata.RData")
+

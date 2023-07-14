@@ -1,6 +1,6 @@
 rm(list=ls())
-load(bstfun::here_data("output/model.RData"))
-load(bstfun::here_data("output/scaledata.RData"))
+load("output/model.RData")
+load("output/scaledata.RData")
 source("scripts/functions_constants.R")
 
 library(ggalluvial)
@@ -278,10 +278,17 @@ ht_list <- medhm_inf + corehm +medhm_ninf
 ht_opt$TITLE_PADDING = unit(c(0.2, 0), "cm")
 ht_opt$COLUMN_ANNO_PADDING = unit(0.3, "cm")
 fig4b <- grid.grabExpr(draw(ht_list, ht_gap = unit(0.3, "cm"),heatmap_legend_side = "bottom"))
-fig4b_fin <- plot_grid(fig2b, labels=c("B"), scale=0.93, label_size=30)
+fig4b_fin <- plot_grid(fig4b, labels=c("B"), scale=0.93, label_size=30)
 
 
 ####### Inferences for cluster transition outcomes ####
+
+# Dummy variables to allow for rowbinding later on.
+crp_cox_cindex_os <- as.data.frame(t(c(crp_coxph_cindex=NA, crp_coxph_cindex_contrast=NA, crp_pvalue_cindex_contrast=NA)))
+crp_cox_cindex_pfs<- as.data.frame(t(c(crp_coxph_cindex=NA, crp_coxph_cindex_contrast=NA, crp_pvalue_cindex_contrast=NA)))
+crpferr_cox_cindex_os<- as.data.frame(t(c(crpferr_coxph_cindex=NA, crpferr_coxph_cindex_contrast=NA, crpferr_pvalue_cindex_contrast=NA)))
+crpferr_cox_cindex_pfs<- as.data.frame(t(c(crpferr_coxph_cindex=NA, crpferr_coxph_cindex_contrast=NA, crpferr_pvalue_cindex_contrast=NA)))
+
 # Identify how patients are transitioning between clusters from preapheresis to preinfusion.
 fig6c_df_inf <- prealluv %>%
   filter(!is.na(preaph_cluster)) %>%

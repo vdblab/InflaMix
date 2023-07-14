@@ -17,7 +17,7 @@ dev_model <- "VVV"
 dev_modelG <- 2 # 2 clusters
 d0clusters <- Mclust(df_dev %>% select(starts_with("d0_")), modelNames = dev_model, G = dev_modelG)
 
-entropy = 1 + sum((d0clusters$z+1e-8)*log(d0clusters$z+1e-8))/(nrow(df_dev)*log(4))
+entropy = 1 + sum((d0clusters$z+1e-8)*log(d0clusters$z+1e-8))/(nrow(df_dev)*log(2))
 
 # Define the mean laboratory vector for the inflammatory cluster (the one that has the higher IL-6 value)
 ref_inflam_vec <- d0clusters$parameters$mean[,which.max(d0clusters$parameters$mean["d0_il6",])]

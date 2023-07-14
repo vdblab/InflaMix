@@ -17,7 +17,21 @@ A description of the two data inputs for this project and a description of their
 
 Scripts should be run in the following order which contains code for the corresponding figures:
 
-### 0 . Please place Dataset 1 (deriv_cohort_d0_labs.csv) into the data folder. This was provided as a supplementary material. 
+## Set-up
+
+1. Download this entire directory from GitHub. Open the "InflaMix.Rproj" file in a suitable IDE like R-Studio.
+
+2. Install all required packages, either manually by reviewing required libraries at the top of every script in the "scripts/" directory, or use the "renv" package "https://rstudio.github.io/renv/articles/renv.html"
+ - Note that the "survcomp" and "ComplexHeatmap" packages require installation through BioConductor.
+  - https://bioconductor.org/packages/release/bioc/html/survcomp.html
+  - https://bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html 
+ - Download and Installation should not more than a few minutes to an hour. 
+
+3. Follow the steps below. 
+
+### 0 . Please place Dataset 1 (deriv_cohort_d0_labs_v2_dataset1.csv) into the data folder. This was provided as a supplementary material. 
+
+Every script here should run within a minute. There are two exceptions (see steps 5 and 7)
 
 1. scaling_sfig3.R 
   - Supplementary Figure 3
@@ -34,6 +48,7 @@ Scripts should be run in the following order which contains code for the corresp
 5. deriv_cohort_properties_fig1a_g_sfig2.R 
   - Figure 1a-g, Supplementary Figure 2
    - Note that Figures 1d, e, f cannot be plotted with provided data, code should be run line-by-line.
+  - In generating Figure 1g, the run time for generating each independent iteration of random forest will take 3-5 minutes. For 100 iterations this will take several hours. 
   
 6. deriv_outcomes_fig1h_l_table2.R
  - Figure 1h-l
@@ -42,6 +57,7 @@ Scripts should be run in the following order which contains code for the corresp
 7. partial_lab_clustering_fig2ab_fig2a_c.R
  - Figure 2a-b, Figure 3a-c
  - Note that this script cannot be run with provided data. Though the code and comments describe the analysis to evaluate the quality of clustering with partially available laboratory data 
+ - In assigning clusters to patients with randomly simulated missing data over 100 iterations and evaluating pairwise linear regressions across iterations, the run time for this script will take ~2-3 hours. 
  
 8. validation_fig2c_k_fig3d_l_efig4_table2.R
  - Figure 2c-k, Figure 3d-l, Extended Figure 4a-f
